@@ -112,8 +112,7 @@ def populate_stats():
     curren_dateime_formatted = current_datetime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     last_updated_formatted = last_updated.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
-    # Query the two GET endpoints from your Data Store Service (using requests.get) to get all new events 
-    # from the last datetime you requested them (from your statistics) to the current datetime
+    # Query the two GET endpoints from your Data Store Service (using requests.get) to get all new events from the last datetime you requested them (from your statistics) to the current datetime
     hotel_rooms_url = f"{app_config['eventstore']['url']}/booking/hotel-rooms?start_timestamp={last_updated_formatted}&end_timestamp={curren_dateime_formatted}"
     hotel_activities_url = f"{app_config['eventstore']['url']}/booking/hotel-activities?start_timestamp={last_updated_formatted}&end_timestamp={curren_dateime_formatted}"
 
@@ -205,7 +204,7 @@ def populate_stats():
 
     print("Pass Ten!")
 
-    # # Log a DEBUG message for each event processed that includes the trace_id
+    # Log a DEBUG message for each event processed that includes the trace_id
     if len(event_1_res_json):
         trace_ids = [event_1["trace_id"] for event_1 in event_1_res_json]
         logger.debug(f"Processed Hotel Room Reservation Event Trace IDs: {', '.join(trace_ids)}")
