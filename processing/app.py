@@ -118,7 +118,7 @@ def populate_stats():
 
     # print(hotel_rooms_url)
 
-    print("Pass Five!")
+    # print("Pass Five!")
 
     event_1_response = requests.get(hotel_rooms_url)
     event_2_response = requests.get(hotel_activities_url)
@@ -126,7 +126,7 @@ def populate_stats():
     # print(event_1_response)
     # print(event_2_response)
 
-    print("Pass Six!")
+    # print("Pass Six!")
 
     event_1_res_json = event_1_response.json()
     event_2_res_json = event_2_response.json()
@@ -184,12 +184,12 @@ def populate_stats():
     else:
         new_max_hotel_activity_ppl = max_hotel_activity_ppl_sql
     
-    print("Pass Eight!")
+    # print("Pass Eight!")
 
     new_num_hotel_room_reservations = stats.num_hotel_room_reservations + len(event_1_res_json)
     new_num_hotel_activity_reservations = stats.num_hotel_activity_reservations + len(event_2_res_json)
 
-    print("Pass Nine!")
+    # print("Pass Nine!")
 
     new_stats = Stats(
         num_hotel_room_reservations=new_num_hotel_room_reservations,
@@ -202,7 +202,7 @@ def populate_stats():
     # Write the updated statistics to the SQLite database file (filename defined in your configuration)
     session.add(new_stats)
 
-    print("Pass Ten!")
+    # print("Pass Ten!")
 
     # Log a DEBUG message for each event processed that includes the trace_id
     if len(event_1_res_json):
@@ -213,7 +213,7 @@ def populate_stats():
         trace_ids = [event_2["trace_id"] for event_2 in event_2_res_json]
         logger.debug(f"Processed Hotel Activity Reservation Event Trace IDs: {', '.join(trace_ids)}")
 
-    print("Pass Eleven!")
+    # print("Pass Eleven!")
 
     # Log a DEBUG message with your updated statistics values
     logger.debug(f"Num Hotel Room Reservations: {new_stats.num_hotel_room_reservations} \n"
