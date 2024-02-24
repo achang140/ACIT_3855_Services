@@ -2,14 +2,14 @@ FROM ubuntu:18.04
  
 LABEL maintainer="achang140@my.bcit.ca"
 
-# RUN apt-get update -y && \
-# apt-get install -y python3 python3-pip
-
 RUN apt-get update -y && \
-    apt-get install -y python3.7 python3.7-dev python3.7-distutils && \
-    ln -s /usr/bin/python3.7 /usr/bin/python3
+apt-get install -y python3 python3-pip
 
-RUN apt-get install -y python3-pip
+# RUN apt-get update -y && \
+#     apt-get install -y python3.7 python3.7-dev python3.7-distutils && \
+#     ln -s /usr/bin/python3.7 /usr/bin/python3
+
+# RUN apt-get install -y python3-pip
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
