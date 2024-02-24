@@ -10,8 +10,7 @@ import yaml
 import logging
 import logging.config
 import requests
-from datetime import datetime
-import pytz
+import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -76,14 +75,10 @@ def populate_stats():
 
     # Read in the current statistics from the SQLite database (filename defined in your configuration)
     session = DB_SESSION() 
-    
-    print("Pass One!")
-    
+        
     # Query to get all the Stats objects from the database in descending order (from newest to oldest) 
     # Note that the first would be the most recent in this case 
     stats = session.query(Stats).order_by(Stats.last_updated.desc()).first() 
-
-    print("Pass Two!")
 
     # - If no stats yet exist, use default values for the stats
     if stats is None:
@@ -92,31 +87,26 @@ def populate_stats():
             max_hotel_room_ppl = 0,
             num_hotel_activity_reservations = 0,
             max_hotel_activity_ppl = 0,
-            #last_updated=datetime.datetime.now()
-            last_updated=datetime.now()
+            last_updated=datetime.datetime.now()
         )
     
 
     session.add(stats)
     session.commit()
 
-    print("Pass Three!")
-
     last_updated = stats.last_updated
     
     # Get the current datetime
-    # current_datetime = datetime.datetime.now()
-    current_datetime = datetime.now(pytz.utc)
+    current_datetime = datetime.datetime.now()
 
     # print(current_datetime)
     # print(stats.last_updated)
-    # print("Pass Four!")
 
     curren_dateime_formatted = current_datetime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-    # last_updated_formatted = last_updated.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-    last_updated_formatted = last_updated.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    last_updated_formatted = last_updated.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
-    # Query the two GET endpoints from your Data Store Service (using requests.get) to get all new events from the last datetime you requested them (from your statistics) to the current datetime
+    # Query the two GET endpoints from your Data Store Service (using requests.get) to get all new events 
+    # from the last datetime you requested them (from your statistics) to the current datetime
     hotel_rooms_url = f"{app_config['eventstore']['url']}/booking/hotel-rooms?start_timestamp={last_updated_formatted}&end_timestamp={curren_dateime_formatted}"
     hotel_activities_url = f"{app_config['eventstore']['url']}/booking/hotel-activities?start_timestamp={last_updated_formatted}&end_timestamp={curren_dateime_formatted}"
 
@@ -148,8 +138,6 @@ def populate_stats():
 
                         Hotel Activities Error: {event_2_response.text}''')
         return 
-
-    print("Pass Seven!")
 
     # Based on the new events from the Data Store Service:
     # Calculate your updated statistics
@@ -198,7 +186,7 @@ def populate_stats():
     # Write the updated statistics to the SQLite database file (filename defined in your configuration)
     session.add(new_stats)
 
-    # Log a DEBUG message for each event processed that includes the trace_id
+    # # Log a DEBUG message for each event processed that includes the trace_id
     if len(event_1_res_json):
         trace_ids = [event_1["trace_id"] for event_1 in event_1_res_json]
         logger.debug(f"Processed Hotel Room Reservation Event Trace IDs: {', '.join(trace_ids)}")
