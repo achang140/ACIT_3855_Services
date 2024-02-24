@@ -9,8 +9,7 @@ RUN apt-get update -y && \
     apt-get install -y python3.7 python3.7-dev python3.7-distutils && \
     ln -s /usr/bin/python3.7 /usr/bin/python3
 
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.7 get-pip.py
+RUN apt-get install -y python3-pip
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
