@@ -64,14 +64,14 @@ services:
     ports:
       - "8100:8100"
     network_mode: "host"
-    depends: 
+    depends_on: 
       - "storage"
   
   audit_log:
     image: audit_log
     ports: 
       - "8110:8110"
-    depends:
+    depends_on:
       - "kafka"
 
 volumes:
