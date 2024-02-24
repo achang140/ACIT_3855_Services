@@ -11,6 +11,7 @@ import logging
 import logging.config
 import requests
 import datetime
+import pytz
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -103,14 +104,16 @@ def populate_stats():
     last_updated = stats.last_updated
     
     # Get the current datetime
-    current_datetime = datetime.datetime.now()
+    # current_datetime = datetime.datetime.now()
+    current_datetime = datetime.datetime.now(pytz.utc)
 
     # print(current_datetime)
     # print(stats.last_updated)
-    print("Pass Four!")
+    # print("Pass Four!")
 
     curren_dateime_formatted = current_datetime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
-    last_updated_formatted = last_updated.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    # last_updated_formatted = last_updated.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    last_updated_formatted = last_updated.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
     # Query the two GET endpoints from your Data Store Service (using requests.get) to get all new events from the last datetime you requested them (from your statistics) to the current datetime
     hotel_rooms_url = f"{app_config['eventstore']['url']}/booking/hotel-rooms?start_timestamp={last_updated_formatted}&end_timestamp={curren_dateime_formatted}"
