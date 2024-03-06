@@ -1,4 +1,8 @@
 import connexion
+from connexion import FlaskApp
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
+
 import yaml 
 import json 
 import logging
@@ -13,6 +17,17 @@ with open('log_conf.yml', 'r') as f:
     logging.config.dictConfig(log_config)
 
 logger = logging.getLogger('basicLogger')
+
+app = FlaskApp(__name__)
+
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 def get_hotel_room(index):
     """ Get Hotel Room reservations in History """

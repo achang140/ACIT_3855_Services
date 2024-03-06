@@ -1,4 +1,6 @@
 import connexion 
+from connexion import FlaskApp
+from connexion.middleware import MiddlewarePosition
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -13,6 +15,7 @@ import requests
 import datetime
 from pytz import utc 
 
+from starlette.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -32,6 +35,17 @@ DB_ENGINE = create_engine("sqlite:///%s" % app_config["datastore"]["filename"])
 
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
+
+app = FlaskApp(__name__)
+
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 def get_stats():
     """ Gets Hotel Room and Hotel Activity processsed statistics """
