@@ -58,6 +58,7 @@ def get_stats():
         "max_hotel_room_ppl": stats.max_hotel_room_ppl,
         "num_hotel_activity_reservations": stats.num_hotel_activity_reservations,
         "max_hotel_activity_ppl": stats.max_hotel_activity_ppl,
+        "last_updated": stats.last_updated
     }
 
     # Log a DEBUG message with the contents of the Python Dictionary
