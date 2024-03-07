@@ -9,7 +9,7 @@ tags:
   - name: resort_hotels
     description: Hotel rooms and activities available in resort hotels located in different countries 
 paths:
-  /booking/hotel-rooms:
+  booking/hotel-rooms:
     get:
       tags: 
         - resort_hotels
@@ -50,7 +50,7 @@ paths:
                 properties:
                   message:
                     type: string
-  /booking/hotel-activities:
+  booking/hotel-activities:
     get:
       tags: 
         - resort_hotels
