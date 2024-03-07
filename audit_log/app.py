@@ -18,17 +18,6 @@ with open('log_conf.yml', 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
-app = FlaskApp(__name__)
-
-app.add_middleware(
-    CORSMiddleware,
-    position=MiddlewarePosition.BEFORE_EXCEPTION,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
-
 def get_hotel_room(index):
     """ Get Hotel Room reservations in History """
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
@@ -88,6 +77,15 @@ def get_hotel_activity(index):
 
 app = connexion.FlaskApp(__name__, specification_dir="")
 app.add_api("openapi.yaml", strict_validation=True, validate_responses=True) 
+
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8110)
