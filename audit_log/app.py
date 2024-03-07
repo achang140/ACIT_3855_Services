@@ -53,8 +53,8 @@ def get_hotel_activity(index):
     topic = client.topics[str.encode(app_config["events"]["topic"])]
 
     # Here we reset the offset on start so that we retrieve messages at the beginning of the message queue.
-    # To prevent the for loop from blocking, we set the timeout to 100ms. There is a risk that this loop never stops if the
-    # index is large and messages are constantly being received!
+    # To prevent the for loop from blocking, we set the timeout to 100ms. 
+    # There is a risk that this loop never stops if the index is large and messages are constantly being received!
     consumer = topic.get_simple_consumer(reset_offset_on_start=True, consumer_timeout_ms=1000)
     logger.info("Retrieving Hotel Activity at index %d" % index)
     hotel_activity_list = []
