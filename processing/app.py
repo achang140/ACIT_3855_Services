@@ -2,6 +2,7 @@ import connexion
 from connexion import FlaskApp
 from flask_cors import CORS, cross_origin
 # from connexion.middleware import MiddlewarePosition
+# from starlette.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +17,6 @@ import requests
 import datetime
 from pytz import utc 
 
-# from starlette.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
