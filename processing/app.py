@@ -16,6 +16,7 @@ import logging.config
 import requests
 import datetime
 from pytz import utc 
+from pytz import timezone
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -216,7 +217,8 @@ def populate_stats():
 
 
 def init_scheduler():
-    sched = BackgroundScheduler(daemon=True, timezone=utc)
+    sched = BackgroundScheduler(daemon=True, timezone=timezone('America/Vancouver'))
+    # sched = BackgroundScheduler(daemon=True, timezone=utc)
     sched.add_job(populate_stats, 
                   'interval',
                    seconds=app_config['scheduler']['period_sec'])
