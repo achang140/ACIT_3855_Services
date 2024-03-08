@@ -15,6 +15,7 @@ import logging
 import logging.config
 import requests
 import datetime
+import pytz
 from pytz import utc 
 from pytz import timezone
 
@@ -54,14 +55,19 @@ def get_stats():
         logger.error("Statistics do not exist")
         return "Statistics do not exist", 404
 
+    vancouver_timezone = timezone('America/Vancouver')
+    last_updated_vancouver = stats.last_updated.astimezone(vancouver_timezone)
+
     # Convert them as necessary into a new Python dictionary such that the structure matches that of your response defined in the openapi.yaml file.
     statistics = {
         "num_hotel_room_reservations": stats.num_hotel_room_reservations,
         "max_hotel_room_ppl": stats.max_hotel_room_ppl,
         "num_hotel_activity_reservations": stats.num_hotel_activity_reservations,
         "max_hotel_activity_ppl": stats.max_hotel_activity_ppl,
-        "last_updated": stats.last_updated
+        "last_updated": last_updated_vancouver.strftime('%Y-%m-%d %H:%M:%S %Z%z')
     }
+
+    # "last_updated": stats.last_updated 
 
     # Log a DEBUG message with the contents of the Python Dictionary
     logger.debug(statistics)
