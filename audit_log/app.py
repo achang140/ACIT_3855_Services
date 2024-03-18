@@ -50,7 +50,7 @@ def get_hotel_room(index):
 def get_hotel_activity(index):
     """ Get Hotel Activity reservations in History """
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
-    client = KafkaClient(hosts=hostname)
+    client = KafkaClient(hosts=hostname) 
     topic = client.topics[str.encode(app_config["events"]["topic"])]
 
     # Here we reset the offset on start so that we retrieve messages at the beginning of the message queue.

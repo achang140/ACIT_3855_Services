@@ -2,6 +2,7 @@ import connexion
 from connexion import NoContent 
 # import requests
 import yaml 
+import time 
 import logging
 import logging.config
 import uuid
@@ -18,6 +19,18 @@ with open('log_conf.yml', 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
+current_retry = 0
+max_retries = app_config["events"]["max_retries"]
+
+while current_retry < max_retries:
+    try:
+        logger.info(f"Trying to connect to Kafka. Current retry count: {current_retry}")
+        client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+    except:
+        logger.error("Connection failed.")
+        time.sleep({app_config["events"]["sleep_time"]})
+        current_retry += 1
+
 def book_hotel_room(body):
     """ Receives a hotel room booking event """
 
@@ -30,7 +43,7 @@ def book_hotel_room(body):
     # response = requests.post(app_config["eventstore1"]["url"], json=body, headers=headers) # requests.post(url=event_one_url, json=body, headers=headers)
     # logger.info(f"Returned event Hotel Room Booking response (Id: ${body['trace_id']}) with status ${response.status_code}")
     
-    client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+    # client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     producer = topic.get_sync_producer()
     msg = {
@@ -59,7 +72,7 @@ def book_hotel_activity(body):
     # response = requests.post(app_config["eventstore2"]["url"], json=body, headers=headers) # requests.post(url=event_two_url, json=body, headers=headers)
     # logger.info("Returned event Hotel Activity Booking response (Id: %s) with status %d", body["trace_id"], response.status_code)
 
-    client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+    # client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
     topic = client.topics[str.encode(app_config["events"]["topic"])]
     producer = topic.get_sync_producer()
     msg = {

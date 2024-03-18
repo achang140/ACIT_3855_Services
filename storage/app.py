@@ -10,6 +10,7 @@ from hotel_activity import HotelActivity
 
 import yaml
 import json 
+import time 
 import logging
 import logging.config
 import datetime
@@ -27,7 +28,10 @@ with open('log_conf.yml', 'r') as f:
 logger = logging.getLogger('basicLogger')
 
 # DB_ENGINE = create_engine("sqlite:///bookings.sqlite") # Connect to the database (db name: bookings.sqlite)
-DB_ENGINE = create_engine(f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{app_config["datastore"]["hostname"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}')
+DB_ENGINE = create_engine(
+    f'mysql+pymysql://{app_config["datastore"]["user"]}:{app_config["datastore"]["password"]}@{app_config["datastore"]["hostname"]}:{app_config["datastore"]["port"]}/{app_config["datastore"]["db"]}',
+    pool_size=5, pool_recycle=3600, pool_pre_ping=True 
+    )
 
 Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
@@ -38,8 +42,19 @@ def process_messages():
     print("Process Messages Function")
     
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
-    client = KafkaClient(hosts=hostname)
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
+
+    current_retry = 0
+    max_retries = app_config["events"]["max_retries"]
+
+    while current_retry < max_retries:
+        try:
+            logger.info(f"Trying to connect to Kafka. Current retry count: {current_retry}")
+            client = KafkaClient(hosts=hostname) 
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+        except:
+            logger.error("Connection failed.")
+            time.sleep({app_config["events"]["sleep_time"]})
+            current_retry += 1
 
     print("Pass One!")
 
