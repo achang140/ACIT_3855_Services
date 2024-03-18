@@ -26,6 +26,8 @@ while current_retry < max_retries:
     try:
         logger.info(f"Trying to connect to Kafka. Current retry count: {current_retry}")
         client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+        topic = client.topics[str.encode(app_config["events"]["topic"])]
+        producer = topic.get_sync_producer()
         break 
     except:
         logger.error("Connection failed.")
@@ -45,8 +47,8 @@ def book_hotel_room(body):
     # logger.info(f"Returned event Hotel Room Booking response (Id: ${body['trace_id']}) with status ${response.status_code}")
     
     # client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
-    producer = topic.get_sync_producer()
+    # topic = client.topics[str.encode(app_config["events"]["topic"])]
+    # producer = topic.get_sync_producer()
     msg = {
         "type": "hotel_room",
         "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -74,8 +76,8 @@ def book_hotel_activity(body):
     # logger.info("Returned event Hotel Activity Booking response (Id: %s) with status %d", body["trace_id"], response.status_code)
 
     # client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
-    producer = topic.get_sync_producer()
+    # topic = client.topics[str.encode(app_config["events"]["topic"])]
+    # producer = topic.get_sync_producer()
     msg = {
         "type": "hotel_activity",
         "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
