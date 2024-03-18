@@ -28,7 +28,7 @@ while current_retry < max_retries:
         client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
     except:
         logger.error("Connection failed.")
-        time.sleep({app_config["events"]["sleep_time"]})
+        time.sleep(app_config["events"]["sleep_time"])
         current_retry += 1
 
 def book_hotel_room(body):
