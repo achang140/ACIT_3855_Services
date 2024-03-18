@@ -51,6 +51,7 @@ def process_messages():
             logger.info(f"Trying to connect to Kafka. Current retry count: {current_retry}")
             client = KafkaClient(hosts=hostname) 
             topic = client.topics[str.encode(app_config["events"]["topic"])]
+            break 
         except:
             logger.error("Connection failed.")
             time.sleep(app_config["events"]["sleep_time"])

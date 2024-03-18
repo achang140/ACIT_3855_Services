@@ -26,6 +26,7 @@ while current_retry < max_retries:
     try:
         logger.info(f"Trying to connect to Kafka. Current retry count: {current_retry}")
         client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+        break 
     except:
         logger.error("Connection failed.")
         time.sleep(app_config["events"]["sleep_time"])
