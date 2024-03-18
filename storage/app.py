@@ -53,7 +53,7 @@ def process_messages():
             topic = client.topics[str.encode(app_config["events"]["topic"])]
         except:
             logger.error("Connection failed.")
-            time.sleep({app_config["events"]["sleep_time"]})
+            time.sleep(app_config["events"]["sleep_time"])
             current_retry += 1
 
     print("Pass One!")
